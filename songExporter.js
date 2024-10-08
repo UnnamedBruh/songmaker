@@ -73,63 +73,63 @@ var SongMaker = (function() {
 					this.songData.push([instrument, Math.round(start * this.sampleRate * t), Math.round(end * this.sampleRate * t), key, volume])
 				}
 			}
-		}
-		async render(exp = "blob") {
-			const len = Math.max(this.songData.map(note => note[2]))
-			const rendered = new Float32Array(len)
-			async function sineWave(note, start, end, volume) {
-				if (volume === 0) return;
-				const len = rendered.length, cache = 2 * Math.PI, sampleRate = this.sampleRate, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
-				if (volume === 1) {
-					for (let i = start; i !== end; i++) {
-						rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
-						if (i % 200000 === 199999) {
-							await wait(100)
+			this.render = async (exp = "blob") => {
+				const len = Math.max(this.songData.map(note => note[2]))
+				const rendered = new Float32Array(len)
+				async function sineWave(note, start, end, volume) {
+					if (volume === 0) return;
+					const len = rendered.length, cache = 2 * Math.PI, sampleRate = this.sampleRate, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
+					if (volume === 1) {
+						for (let i = start; i !== end; i++) {
+							rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
+							if (i % 200000 === 199999) {
+								await wait(100)
+							}
 						}
-					}
-				} else {
-					for (let i = start; i !== end; i++) {
+					} else {
+						for (let i = start; i !== end; i++) {
 						rendered[i] += Math.sin((cache * frequency * i) / sampleRate) * volume
-						if (i % 200000 === 199999) {
-							await wait(100)
+							if (i % 200000 === 199999) {
+								await wait(100)
+							}
 						}
 					}
 				}
+				for (const note of this.songData) {
+					if (note[0] === "sine") await sineWave(note[3], note[1], note[2], note[4])
+				}
+				const numChannels = 1, ch1 = 32767, ch2 = 32768, ch3 = 0, ch4 = -1, ch5 = 1
+				const len2 = len * 2
+				const buffer = new ArrayBuffer(44 + len2)
+				const view = new DataView(buffer)
+				this.writeString(view, 0, 'RIFF')
+				view.setUint32(4, 36 + len2, true)
+				this.writeString(view, 8, 'WAVE')
+				this.writeString(view, 12, 'fmt ')
+				view.setUint32(16, 16, true)
+				view.setUint16(20, 1, true)
+				view.setUint16(22, numChannels, true)
+				view.setUint32(24, this.sampleRate, true)
+				view.setUint32(28, this.sampleRate * 2, true)
+				view.setUint16(32, 2, true)
+				view.setUint16(34, 16, true)
+				this.writeString(view, 36, 'data')
+				view.setUint32(40, len2, true)
+				let offset = 44, s
+				for (let i = 0; i !== len; i++) {
+					s = Math.max(ch4, Math.min(ch5, rendered[i]))
+					view.setInt16(offset, s < ch3 ? s * ch2 : s * ch1, true)
+					offset += 2
+				}
+				return exp === "blob" ? new Blob([view], { type: 'audio/wav' }) : exp === "dataview" ? view : undefined
 			}
-			for (const note of this.songData) {
-				if (note[0] === "sine") await sineWave(note[3], note[1], note[2], note[4])
+			this.writeString = (view, offset, string) => {
+				for (let i = 0; i < string.length; i++) {
+					view.setUint8(offset + i, string.charCodeAt(i))
+				}
 			}
-			const numChannels = 1, ch1 = 32767, ch2 = 32768, ch3 = 0, ch4 = -1, ch5 = 1;
-			const len2 = len * 2;
-			const buffer = new ArrayBuffer(44 + len2);
-			const view = new DataView(buffer);
-			this.writeString(view, 0, 'RIFF');
-			view.setUint32(4, 36 + len2, true);
-			this.writeString(view, 8, 'WAVE');
-			this.writeString(view, 12, 'fmt ');
-			view.setUint32(16, 16, true);
-			view.setUint16(20, 1, true);
-			view.setUint16(22, numChannels, true);
-			view.setUint32(24, this.sampleRate, true);
-			view.setUint32(28, this.sampleRate * 2, true);
-			view.setUint16(32, 2, true);
-			view.setUint16(34, 16, true);
-			this.writeString(view, 36, 'data');
-			view.setUint32(40, len2, true);
-			let offset = 44, s;
-			for (let i = 0; i !== len; i++) {
-				s = Math.max(ch4, Math.min(ch5, rendered[i]));
-				view.setInt16(offset, s < ch3 ? s * ch2 : s * ch1, true);
-				offset += 2;
-			}
-			return exp === "blob" ? new Blob([view], { type: 'audio/wav' }) : exp === "dataview" ? view : undefined;
+			this.version = 0;
 		}
-		writeString(view, offset, string) {
-			for (let i = 0; i < string.length; i++) {
-				view.setUint8(offset + i, string.charCodeAt(i));
-			}
-		}
-		version = 0;
 	}
 	return SongMaker
 })()
