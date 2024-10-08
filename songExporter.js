@@ -28,7 +28,7 @@ var SongMaker = (function() {
 				if (sampleRate < 0) console.warn("The tempo cannot be ≤ 0, though this case is handled")
 			}
 			sampleRate = Math.abs(Math.round(sampleRate))
-			this.songData = []
+			const songData = []
 			this.lazyCheck = lazy
 			tempo = Math.abs(tempo)
 			this.song = {
@@ -70,15 +70,15 @@ var SongMaker = (function() {
 						}
 					}
 					const t = this.tempo / 120
-					this.songData.push([instrument, Math.round(start * sampleRate * t), Math.round(end * sampleRate * t), key, volume])
+					songData.push([instrument, Math.round(start * sampleRate * t), Math.round(end * sampleRate * t), key, volume])
 				}
 			}
 			this.render = async (exp = "blob") => {
-				const len = Math.max(this.songData.map(note => note[2]))
+				const len = Math.max(songData.map(note => note[2]))
 				const rendered = new Float32Array(len)
 				async function sineWave(note, start, end, volume) {
 					if (volume === 0) return;
-					const len = rendered.length, cache = 2 * Math.PI, sampleRate = sampleRate, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
+					const len = rendered.length, cache = 2 * Math.PI, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
 					if (volume === 1) {
 						for (let i = start; i !== end; i++) {
 							rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
@@ -95,7 +95,7 @@ var SongMaker = (function() {
 						}
 					}
 				}
-				for (const note of this.songData) {
+				for (const note of songData) {
 					if (note[0] === "sine") await sineWave(note[3], note[1], note[2], note[4])
 				}
 				const numChannels = 1, ch1 = 32767, ch2 = 32768, ch3 = 0, ch4 = -1, ch5 = 1
