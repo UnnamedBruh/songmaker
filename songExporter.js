@@ -118,7 +118,7 @@ var SongMaker = (function() {
 				view.setUint32(28, sampleRate * 2, true)
 				view.setUint16(32, 2, true)
 				view.setUint16(34, 16, true)
-				this.writeString(view, 36, 'data')
+				writeString(view, 36, 'data')
 				view.setUint32(40, len2, true)
 				let offset = 44, s
 				for (let i = 0; i !== len; i++) {
