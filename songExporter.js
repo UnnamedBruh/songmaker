@@ -6,11 +6,11 @@ var SongMaker = (function() {
 		constructor(sampleRate = 48000, lazy = false, tempo = 120) {
 			if (typeof sampleRate !== "number") {
 				console.warn("The sample rate must be a number, not a '" + (typeof sampleRate) + "'")
-				sampleRate = 48000;
+				sampleRate = 48000
 			} else {
 				if (sampleRate === 0) {
 					console.warn("The sample rate must not be 0, which this problem unsolved can cause infinitely long audio")
-					sampleRate = 48000;
+					sampleRate = 48000
 				}
 				if (sampleRate < 0) console.warn("The sample rate cannot be ≤ 0, though this case is handled")
 			}
@@ -19,7 +19,7 @@ var SongMaker = (function() {
 			}
 			if (typeof tempo !== "number") {
 				console.warn("The tempo must be a number, not a '" + (typeof sampleRate) + "'")
-				tempo = 120;
+				tempo = 120
 			} else {
 				if (tempo === 0) {
 					console.warn("The tempo must not be 0, which this problem unsolved can cause infinitely long audio")
@@ -27,10 +27,10 @@ var SongMaker = (function() {
 				}
 				if (sampleRate < 0) console.warn("The tempo cannot be ≤ 0, though this case is handled")
 			}
-			this.sampleRate = Math.abs(Math.round(sampleRate));
-			this.songData = [];
+			sampleRate = Math.abs(Math.round(sampleRate))
+			this.songData = []
 			this.lazyCheck = lazy
-			this.tempo = Math.abs(tempo)
+			tempo = Math.abs(tempo)
 			this.song = {
 				note: (instrument = "sine", start = 0, end = 1, key = 60, volume = 1) => {
 					// I hate programming these checks
@@ -70,7 +70,7 @@ var SongMaker = (function() {
 						}
 					}
 					const t = this.tempo / 120
-					this.songData.push([instrument, Math.round(start * this.sampleRate * t), Math.round(end * this.sampleRate * t), key, volume])
+					this.songData.push([instrument, Math.round(start * sampleRate * t), Math.round(end * sampleRate * t), key, volume])
 				}
 			}
 			this.render = async (exp = "blob") => {
@@ -78,7 +78,7 @@ var SongMaker = (function() {
 				const rendered = new Float32Array(len)
 				async function sineWave(note, start, end, volume) {
 					if (volume === 0) return;
-					const len = rendered.length, cache = 2 * Math.PI, sampleRate = this.sampleRate, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
+					const len = rendered.length, cache = 2 * Math.PI, sampleRate = sampleRate, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
 					if (volume === 1) {
 						for (let i = start; i !== end; i++) {
 							rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
@@ -88,7 +88,7 @@ var SongMaker = (function() {
 						}
 					} else {
 						for (let i = start; i !== end; i++) {
-						rendered[i] += Math.sin((cache * frequency * i) / sampleRate) * volume
+							rendered[i] += Math.sin((cache * frequency * i) / sampleRate) * volume
 							if (i % 200000 === 199999) {
 								await wait(100)
 							}
