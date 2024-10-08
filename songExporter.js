@@ -76,7 +76,7 @@ var SongMaker = (function() {
 			this.render = async (exp = "blob") => {
 				const len = Math.max(songData.map(note => note[2]))
 				const rendered = new Float32Array(len)
-				async function sineWave(note, start, end, volume) {
+				async function sineWave(start, end, note, volume) {
 					if (volume === 0) return;
 					const len = rendered.length, cache = 2 * Math.PI, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
 					if (volume === 1) {
@@ -96,7 +96,7 @@ var SongMaker = (function() {
 					}
 				}
 				for (const note of songData) {
-					if (note[0] === "sine") await sineWave(note[3], note[1], note[2], note[4])
+					if (note[0] === "sine") await sineWave(note[1], note[2], note[3], note[4])
 				}
 				const numChannels = 1, ch1 = 32767, ch2 = 32768, ch3 = 0, ch4 = -1, ch5 = 1
 				const len2 = len * 2
