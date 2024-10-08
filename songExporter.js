@@ -69,7 +69,7 @@ var SongMaker = (function() {
 							throw new Error("The 'volume' parameter must NOT be a negative value")
 						}
 					}
-					const t = this.tempo / 120
+					const t = tempo / 120
 					songData.push([instrument, Math.round(start * sampleRate * t), Math.round(end * sampleRate * t), key, volume])
 				}
 			}
