@@ -73,6 +73,11 @@ var SongMaker = (function() {
 					songData.push([instrument, Math.round(start * sampleRate * t), Math.round(end * sampleRate * t), key, volume])
 				}
 			}
+			const writeString = (view, offset, string) => {
+				for (let i = 0; i < string.length; i++) {
+					view.setUint8(offset + i, string.charCodeAt(i))
+				}
+			}
 			this.render = async (exp = "blob") => {
 				const len = Math.max(songData.map(note => note[2]))
 				const rendered = new Float32Array(len)
@@ -102,10 +107,10 @@ var SongMaker = (function() {
 				const len2 = len * 2
 				const buffer = new ArrayBuffer(44 + len2)
 				const view = new DataView(buffer)
-				this.writeString(view, 0, 'RIFF')
+				writeString(view, 0, 'RIFF')
 				view.setUint32(4, 36 + len2, true)
-				this.writeString(view, 8, 'WAVE')
-				this.writeString(view, 12, 'fmt ')
+				writeString(view, 8, 'WAVE')
+				writeString(view, 12, 'fmt ')
 				view.setUint32(16, 16, true)
 				view.setUint16(20, 1, true)
 				view.setUint16(22, numChannels, true)
@@ -122,11 +127,6 @@ var SongMaker = (function() {
 					offset += 2
 				}
 				return exp === "blob" ? new Blob([view], { type: 'audio/wav' }) : exp === "dataview" ? view : undefined
-			}
-			this.writeString = (view, offset, string) => {
-				for (let i = 0; i < string.length; i++) {
-					view.setUint8(offset + i, string.charCodeAt(i))
-				}
 			}
 			this.version = 0;
 		}
