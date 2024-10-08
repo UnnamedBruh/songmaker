@@ -81,14 +81,14 @@ var SongMaker = (function() {
 				const len = rendered.length, cache = 2 * Math.PI, sampleRate = this.sampleRate, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
 				if (volume === 1) {
 					for (let i = start; i !== end; i++) {
-						rendered[i] = Math.sin((cache * frequency * i) / sampleRate)
+						rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
 						if (i % 200000 === 199999) {
 							await wait(100)
 						}
 					}
 				} else {
 					for (let i = start; i !== end; i++) {
-						rendered[i] = Math.sin((cache * frequency * i) / sampleRate) * volume
+						rendered[i] += Math.sin((cache * frequency * i) / sampleRate) * volume
 						if (i % 200000 === 199999) {
 							await wait(100)
 						}
