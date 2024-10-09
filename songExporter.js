@@ -103,8 +103,7 @@ var SongMaker = (function() {
 				}
 				async function buzz(start, end, note, volume) {
 					if (volume === 0) return;
-					const len = rendered.length, cache = 2 * Math.PI, frequencyTable = {"60": 368.8524590163935}
-					const frequency = frequencyTable[note]
+					const len = rendered.length, cache = 2 * Math.PI, frequency = sampleRate / (440 * Math.pow(2, (note - 69) / 12))
 					const p = frequency - 1
 					let cli = 0, co
 					if (volume === 1) {
