@@ -125,7 +125,7 @@ var SongMaker = (function() {
 				let offset = 44, s
 				for (let i = 0; i !== len; i++) {
 					s = Math.max(ch4, Math.min(ch5, rendered[i]))
-					view.setInt16(offset, s < 0 ? s * ch1 : c * ch2, true)
+					view.setInt16(offset, s < 0 ? s * ch1 : s * ch2, true)
 					offset += 2
 				}
 				return exp === "blob" ? new Blob([view], { type: 'audio/wav' }) : exp === "dataview" ? view : undefined
