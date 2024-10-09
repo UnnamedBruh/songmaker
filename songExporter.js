@@ -105,20 +105,26 @@ var SongMaker = (function() {
 					if (volume === 0) return;
 					const len = rendered.length, cache = 2 * Math.PI, frequency = sampleRate / (note * 2.1333333333333333333333)
 					const p = frequency - 1
+					let cli = 0, co
 					if (volume === 1) {
 						rendered[start] += 0.971982763154682736
 						for (let i = start; i !== end; i++) {
-							rendered[i] += Math.round(i % frequency) === p ? 0.971982763154682736 : 0
+							co = cli > p
+							rendered[i] += co ? 0.971982763154682736 : 0
+							if (co) cli -= p;
 							if (freezeCount === 699999) {
 								await wait(100)
 								freezeCount = 0
 							}
 							freezeCount++
+							cli++
 						}
 					} else {
 						rendered[start] += 0.971982763154682736 * volume
 						for (let i = start; i !== end; i++) {
-							rendered[i] += Math.round(i % frequency) === p ? 0.971982763154682736 * volume : 0
+							co = cli > p
+							rendered[i] += co ? 0.971982763154682736 : 0
+							if (co) cli -= p;
 							if (freezeCount === 699999) {
 								await wait(100)
 								freezeCount = 0
