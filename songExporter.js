@@ -41,16 +41,12 @@ var SongMaker = (function() {
 							throw new Error("The 'start' parameter must be provided/a numerical value")
 						} else if (start < 0) {
 							throw new Error("The 'start' parameter must not be a negative value")
-						} else if (start % 1 !== 0) {
-							throw new Error("The 'start' parameter must be a whole number")
 						} else if (start === Infinity) {
 							throw new Error("The 'start' parameter must be a finite value")
 						} else if (typeof end !== "number") {
 							throw new Error("The 'end' parameter must be provided/a numerical value")
 						} else if (end < 0) {
 							throw new Error("The 'end' parameter must not be a negative value")
-						} else if (end % 1 !== 0) {
-							throw new Error("The 'end' parameter must be a whole number")
 						} else if (end === Infinity) {
 							throw new Error("The 'end' parameter must be a finite value")
 						} else if (start > end) {
