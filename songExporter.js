@@ -105,7 +105,7 @@ var SongMaker = (function() {
 				for (const note of songData) {
 					if (note[0] === "sine") await sineWave(note[1], note[2], note[3], note[4])
 				}
-				const numChannels = 1, ch1 = 32767, ch2 = 32768 ch3 = 0, ch4 = -1, ch5 = 1
+				const numChannels = 1, ch1 = 32767, ch2 = 32768, ch3 = 0, ch4 = -1, ch5 = 1
 				const len2 = len * 2
 				const buffer = new ArrayBuffer(44 + len2)
 				const view = new DataView(buffer)
