@@ -70,11 +70,9 @@ var SongMaker = (function() {
 				}
 			}
 			const writeString = (view, offset, string) => {
-				try {
-					for (let i = 0; i < string.length; i++) {
-						view.setUint8(offset + i, string.charCodeAt(i))
-					}
-				} catch {}
+				for (let i = 0; i < string.length; i++) {
+					view.setUint8(offset + i, string.charCodeAt(i))
+				}
 			}
 			this.render = async (exp = "blob") => {
 				const len = Math.max(...songData.map(note => note[2]))
