@@ -28,7 +28,7 @@
 				render.disabled = false
 				let i = 0
 				add.onclick = () => {
-					song.song.note("sine", i++ * 0.2, i * 0.2, i + 60)
+					song.song.note("buzz", i * 0.2, i++ * 0.2, i + 59)
 				}
 				render.onclick = () => {
 					render.disabled = true
