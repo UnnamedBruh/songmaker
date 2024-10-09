@@ -80,7 +80,7 @@ var SongMaker = (function() {
 				const rendered = new Float32Array(len)
 				async function sineWave(start, end, note, volume) {
 					if (volume === 0) return;
-					const len = rendered.length, cache = 2 * Math.PI, frequency = 440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12))
+					const len = rendered.length, cache = 2 * Math.PI, frequency = Math.floor(440 * (note === 69 ? 1 : Math.pow(2, (note - 69) / 12)))
 					if (volume === 1) {
 						for (let i = start; i !== end; i++) {
 							rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
@@ -103,7 +103,7 @@ var SongMaker = (function() {
 				}
 				async function buzz(start, end, note, volume) {
 					if (volume === 0) return;
-					const len = rendered.length, cache = 2 * Math.PI, frequency = sampleRate / (440 * Math.pow(2, (note - 69) / 12))
+					const len = rendered.length, cache = 2 * Math.PI, frequency = 368.858 * Math.pow(2, (note - 69) / 12)
 					const p = frequency - 1
 					let cli = 0, co
 					if (volume === 1) {
