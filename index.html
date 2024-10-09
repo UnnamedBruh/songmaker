@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<meta charset="utf8" />
+		<title>Hello!</title>
+		<script src="songExporter.js"></script>
+	</head>
+	<body>
+		<h1>Simple Song Maker</h1>
+		<button id="addNote" disabled>+</button>
+		<button id="rend" disabled>Render and Download Song</button>
+		<script>
+			(async function() {
+				async function waitUntil(func) {
+					return new Promise(function(res) {
+						function loop() {
+							if (!func()) {
+								setTimeout(loop, 200)
+							} else {
+								res()
+							}
+						}
+						loop()
+					})
+				}
+				await waitUntil(() => typeof SongMaker === "function")
+				const song = new SongMaker(), add = document.getElementById("addNote"), render = document.getElementById("rend")
+				add.disabled = false
+				render.disabled = false
+				let i = 0
+				add.onclick = () => {
+					song.song.note("sine", i++ * 0.2, i * 0.2, i + 60)
+				}
+				render.onclick = () => {
+					render.disabled = true
+					song.render("blob").then(data => {
+						const a = document.createElement("a")
+						a.href = URL.createObjectURL(data)
+						a.download = "song.wav"
+						a.click()
+						setTimeout(function() {
+							URL.revokeObjectURL(a.href)
+							a.remove()
+						}, 1000)
+						render.disabled = false
+					})
+				}
+			})()
+		</script>
+	</body>
+</html>
