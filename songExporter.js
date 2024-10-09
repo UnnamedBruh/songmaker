@@ -85,14 +85,14 @@ var SongMaker = (function() {
 					if (volume === 1) {
 						for (let i = start; i !== end; i++) {
 							rendered[i] += Math.sin((cache * frequency * i) / sampleRate)
-							if (i % 200000 === 199999) {
+							if (i % 1000000 === 999999) {
 								await wait(100)
 							}
 						}
 					} else {
 						for (let i = start; i !== end; i++) {
 							rendered[i] += Math.sin((cache * frequency * i) / sampleRate) * volume
-							if (i % 200000 === 199999) {
+							if (i % 1000000 === 999999) {
 								await wait(100)
 							}
 						}
@@ -123,6 +123,9 @@ var SongMaker = (function() {
 				for (let i = 0; i !== len; i++) {
 					s = Math.max(ch4, Math.min(ch5, rendered[i]))
 					view.setInt16(offset, s < 0 ? s * ch1 : s * ch2, true)
+					if (offset % 1000000 === 999999) {
+						await wait(100)
+					}
 					offset += 2
 				}
 				return exp === "blob" ? new Blob([view], { type: 'audio/wav' }) : exp === "dataview" ? view : undefined
