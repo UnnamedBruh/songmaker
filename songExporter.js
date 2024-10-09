@@ -103,7 +103,7 @@ var SongMaker = (function() {
 				}
 				async function buzz(start, end, note, volume) {
 					if (volume === 0) return;
-					const len = rendered.length, cache = 2 * Math.PI, frequency = sampleRate / (note * 2.1333333333333333333333)
+					const len = rendered.length, cache = 2 * Math.PI, frequency = sampleRate / ((note * 6 - 240) * 2.1333333333333333333333)
 					const p = frequency - 1
 					let cli = 0, co
 					if (volume === 1) {
